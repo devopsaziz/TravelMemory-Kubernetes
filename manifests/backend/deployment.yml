@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: backend
+spec:
+  selector:
+    matchLabels:
+      app: backend
+  
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+      - name: backend
+        image: kubeaziz/travelmemory:backendlatest
+        env: 
+        - name: PORT
+          value: "3001"
+        - name: MONGO_URI
+          valueFrom: 
+            secretKeyRef:
+              name: backend-secret
+              key: mongo-uri
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 3001
